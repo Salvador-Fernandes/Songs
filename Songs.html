@@ -1,0 +1,96 @@
+<html>
+<title>Songs</title>
+<style>
+table{
+	font-size: 1.5em;
+	width:100%;
+	height:90vh;
+	vertical-align: middle;
+}
+body {
+  background-color: black;
+  color: white;
+  font-size: 25px;
+}
+
+.light-mode {
+  background-color: white;
+  color: black;
+}
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+input {
+	height: 25px;
+	border: 0;
+	border-radius: 25px;
+	text-align: center; 
+}
+</style>
+<div class="Header" style="text-align:center; padding: 5px">
+	<input type="button" onclick="theme()" value="&#128161;" />
+	<input id="song" list="songs" placeholder="" onchange="search(this)" />
+	<datalist id="songs" >
+	  <option value="Bless the Lord" />
+	</datalist>  
+	<input type="button" onclick="search()" value="Search" />
+</div>
+
+<div class="main" style="text-align:center">
+	<table style="">
+		</tr>
+			<th style="width:50%" id="English" style="text-align:center;">
+			</th>
+		<!-- </tr><tr> -->
+			<th style="width:50%" id="Hindi" style="text-align:center;">
+			</th>
+		</tr>
+		
+	</table>
+</div>
+<script type="text/javascript">
+	function theme() {
+	   var element = document.body;
+	   element.classList.toggle("light-mode");
+	}
+	
+	function loadXMLDoc(fieldName,fileurl) {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				parser = new DOMParser();
+				xmlDoc = parser.parseFromString(this.responseText,"text/xml");
+				var book = document.getElementById("book").value;
+				var books = document.getElementsByTagName("option");
+				var id = 0;
+				for (var i=0;i<66;i++) {
+					if (books[i].value == book) {
+						id = i;
+						break;
+					}
+				} 
+				var chapter = parseInt(document.getElementById("chapter").value)-1;
+				var verse = parseInt(document.getElementById("verse").value)-1;
+				x = xmlDoc.getElementsByTagName("Book");
+				y = x[id].getElementsByTagName("Chapter");
+				document.getElementById("chapter").max = y.length;
+				z = y[chapter].getElementsByTagName("Verse");	
+				document.getElementById("verse").max = z.length;	
+				if(z[verse] == undefined) {value = "";} 
+				else{value = z[verse].innerHTML.slice(1,-1);}
+				document.getElementById(fieldName).innerHTML = value;
+			}
+		};
+		xmlhttp.open("GET", fileurl, true);
+		xmlhttp.send();
+		
+	}
+	function search(){
+		loadXMLDoc("English","https://raw.githubusercontent.com/Salvador-Fernandes/HolyBible/main/XMLs/English.xml");
+		loadXMLDoc("Hindi","https://raw.githubusercontent.com/Salvador-Fernandes/HolyBible/main/XMLs/Hindi.xml");
+	}
+	search();
+	
+</script>
+</html>
