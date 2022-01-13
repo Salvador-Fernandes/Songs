@@ -70,11 +70,12 @@ input {
 			if (this.readyState == 4 && this.status == 200) {
 				parser = new DOMParser();
 				xmlDoc = parser.parseFromString(this.responseText,"text/xml");
-				var verses = xmlDoc.getElementsByTagName("Verse");
-				max = verses.length;
+				var versesE = xmlDoc.getElementsByTagName("VerseE");
+				var versesH = xmlDoc.getElementsByTagName("VerseH");
+				max = versesE.length > versesH.length ? versesE.length : versesH.length;
 				//console.log(verses[index].innerHTML);
-				document.getElementById("English").innerHTML = "<p>"+verses[index].innerHTML.replaceAll("\n","<br/>")+"</p>"; 
-				document.getElementById("Hindi").innerHTML = "<p>"+verses[index].innerHTML.replaceAll("\n","<br/>")+"</p>";
+				document.getElementById("English").innerHTML = "<p>"+versesE[index].innerHTML.trim().replaceAll("\n","<br/>")+"</p>"; 
+				document.getElementById("Hindi").innerHTML = "<p>"+versesH[index].innerHTML.trim().replaceAll("\n","<br/>")+"</p>";
 			}else{
 				document.getElementById("English").innerHTML = "";
 			}
